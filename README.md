@@ -81,7 +81,7 @@ my.showLoading({
   content: '加载中'
 })
 
-// 使用 mpapi 之后，都能运行
+// 使用 mpapi 之后，都能运行
 api.showLoading('加载中')
 api.showLoading({
   title: '提示内容'
@@ -140,7 +140,7 @@ if(api.isAlipay){
   api.startZMVerify({...})
 }
 
-// 只在微信里面有效，支付宝里面会报错
+// 只在微信里面有效，支付宝里面会报错
 api.setTopBarText({...})
 
 // 建议这样处理
