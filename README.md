@@ -81,7 +81,7 @@ my.showLoading({
   content: '加载中'
 })
 
-// 使用 mpapi 之后，都能运行
+// 使用 mpapi 之后，两端兼容
 api.showLoading('加载中')
 api.showLoading({
   title: '提示内容'
@@ -108,7 +108,7 @@ my.showActionSheet({
   }
 })
 
-// 使用 mpapi 之后，都能运行
+// 使用 mpapi，两端兼容
 api.showActionSheet({
   itemList: ['台球', '羽毛球', '篮球'],
   success: (res) => {
@@ -132,7 +132,7 @@ api.alert({
 
 有的API只在支付宝或者微信里面有效，无法兼容处理，如下
 ```javascript
-// 只在支付宝里面有效，微信里面会报错
+// 只在支付宝里面有效，微信里面会报错
 api.startZMVerify({...})
 
 // 建议这样处理
