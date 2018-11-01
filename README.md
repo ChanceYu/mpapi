@@ -90,7 +90,7 @@ api.showLoading({
 
 2、返回参不一致
  
-例如：`showActionSheet` 方法，执行完之后获取选择的索引，微信里面是 `res.tapIndex`，支付宝里面是 `res.index`，如下
+例如：`showActionSheet` 方法，执行完之后获取选择的索引，微信里面是 `res.tapIndex`，支付宝里面是 `res.index`，如下
 ```javascript
 // 微信
 wx.showActionSheet({
