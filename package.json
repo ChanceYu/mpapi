@@ -1,11 +1,12 @@
 {
   "name": "mpapi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "微信小程序和支付宝小程序API兼容插件。一次编写，两端运行",
   "main": "lib/mpapi.js",
   "scripts": {
     "dev": "NODE_ENV=development webpack --watch --config webpack.config --colors",
-    "build": "NODE_ENV=production webpack --config webpack.config --colors"
+    "build": "NODE_ENV=production webpack --config webpack.config --colors",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "repository": {
     "type": "git",
