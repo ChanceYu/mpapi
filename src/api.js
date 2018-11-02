@@ -1,7 +1,11 @@
+import nocallback from './methods/nocallback'
+
 const isWechat = typeof wx !== 'undefined' && typeof wx.showToast === 'function'
 const isAlipay = typeof my !== 'undefined' && typeof my.showToast === 'function'
 
 const $global = isWechat ? wx : my
+
+const _toString = Object.prototype.toString
 
 /**
  * 挂载API
@@ -13,7 +17,19 @@ function _addMethod(methods){
   for (let attr in $global) {
     if (!this.hasOwnProperty(attr)) {
       if(typeof $global[attr] === 'function'){
-        this[attr] = (opts) => _Promised(attr, opts)
+
+        this[attr] = (opts) => {
+          let type = _toString.call(opts)
+
+          if((type === '[object Undefined]' || type === '[object Object]')
+           && nocallback.indexOf(attr) === -1
+          ){
+            return _Promised(attr, opts)
+          }else{
+            return $global[attr](opts)
+          }
+        }
+
       }else{
         this[attr] = $global[attr]
       }
