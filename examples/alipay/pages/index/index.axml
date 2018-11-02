@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="api-list">
+    <view class="tip">提示: 点击执行API<text>（兼容微信小程序和支付宝小程序）</text></view>
+
+    <view
+      class="box"
+      hover-class="hover"
+      a:for="{{polyfills}}"
+      a:key="{{index}}"
+    >
+      <view class="title">{{item.title}}</view>
+      <view
+        class="method-item"
+        hover-class="hover"
+        a:for="{{item.items}}"
+        a:for-item="methodItem"
+        a:for-index="methodIndex"
+        a:key="{{methodIndex}}"
+        data-method="{{methodItem[0]}}"
+        data-option="{{methodItem[1]}}"
+        onTap="handler"
+      >
+        {{methodItem[0]}}
+      </view>
+    </view>
+
+  </view>
+</view>

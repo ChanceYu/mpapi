@@ -56,5 +56,7 @@ license: ${packageJSON.license}`)
 }
 
 module.exports = [
-  getConfig(path.join(__dirname, 'lib'))
+  getConfig(path.join(__dirname, 'lib')),
+  getConfig(path.join(__dirname, 'examples/wechat/js')),
+  getConfig(path.join(__dirname, 'examples/alipay/js')),
 ]

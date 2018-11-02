@@ -21,5 +21,4 @@ $RECYCLE.BIN/
 .vscode
 
 node_modules
-examples
 *.js.map
