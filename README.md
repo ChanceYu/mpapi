@@ -2,10 +2,20 @@
 
 > mpapi（miniProgram API），微信小程序和支付宝小程序 API 兼容插件。一次编写，两端运行。
 
+[![NPM][img-npm]][url-npm]
+
+[![Language][img-javascript]][url-github]
+[![License][img-mit]][url-mit]
 
 你是否遇到要同时开发输出微信小程序和支付宝小程序？而两者的API写法又不一样，兼容繁琐麻烦？那么此插件是不错的选择。
 
-使用时直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
+
+## 安装
+非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
+```bash
+npm install mpapi --save
+```
+使用
 ```javascript
 const api = require('mpapi')
 
@@ -214,7 +224,10 @@ api.getLocation().then((res) => {})
 
 
 [url-github]: https://github.com/ChanceYu/mpapi
+[url-npm]: https://www.npmjs.com/package/mpapi
 [url-mit]: https://opensource.org/licenses/mit-license.php
 
+[img-npm]: https://nodei.co/npm/mpapi.png?compact=true
+[img-javascript]: https://img.shields.io/badge/language-JavaScript-brightgreen.svg
 [img-mit]: https://img.shields.io/badge/license-MIT-blue.svg
 

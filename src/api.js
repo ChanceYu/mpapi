@@ -15,24 +15,23 @@ function _addMethod(methods){
 
   // 其它 API 或属性
   for (let attr in $global) {
-    if (!this.hasOwnProperty(attr)) {
-      if(typeof $global[attr] === 'function'){
+    if (this.hasOwnProperty(attr)) continue;
 
-        this[attr] = (opts) => {
-          let type = _toString.call(opts)
+    if(typeof $global[attr] === 'function'){
 
-          if((type === '[object Undefined]' || type === '[object Object]')
-           && nocallback.indexOf(attr) === -1
-          ){
-            return _Promised(attr, opts)
-          }else{
-            return $global[attr](opts)
-          }
+      this[attr] = (opts) => {
+        let type = _toString.call(opts)
+
+        if((type === '[object Undefined]' || type === '[object Object]')
+         && nocallback.indexOf(attr) === -1){
+          return _Promised(attr, opts)
+        }else{
+          return $global[attr](opts)
         }
-
-      }else{
-        this[attr] = $global[attr]
       }
+
+    }else{
+      this[attr] = $global[attr]
     }
   }
 }
