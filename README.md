@@ -1,13 +1,13 @@
 # mpapi
 
-> mpapi（miniProgram API），小程序 API 兼容插件。一次编写，多端运行。
+> mpapi（miniProgram API），小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序
 
 [![NPM][img-npm]][url-npm]
 
 [![Language][img-javascript]][url-github]
 [![License][img-mit]][url-mit]
 
-你是否遇到要同时开发输出 **微信小程序**、**支付宝小程序** 或 **百度智能小程序**？而它们之间的API写法又不一样，兼容繁琐麻烦？那么此插件是不错的选择。
+你是否遇到要同时开发输出 **微信小程序**、**支付宝小程序** 或 **百度智能小程序** ？而它们之间的 API 写法又不一样，兼容繁琐麻烦？那么此插件是不错的选择。
 
 
 ## 安装
@@ -15,7 +15,7 @@
 ```bash
 npm install mpapi --save
 ```
-使用，目前支持：微信小程序、支付宝小程序、百度智能小程序
+使用
 ```javascript
 const api = require('mpapi')
 
@@ -24,19 +24,19 @@ api.confirm({...}).then((res) => {})
 api.getLocation().then((res) => {})
 ...
 
+// 微信小程序的处理
 if(api.isWechat){
-  // 微信小程序的处理
-  api.setTopBarText({...})
+  api.setTopBarText({...}).then((res) => {})
 }
 
+// 支付宝小程序的处理
 if(api.isAlipay){
-  // 支付宝小程序的处理
-  api.startZMVerify({...})
+  api.startZMVerify({...}).then((res) => {})
 }
 
+// 百度智能小程序的处理
 if(api.isSwan){
-  // 百度智能小程序的处理
-  api.getSwanId({...})
+  api.getSwanId().then((res) => {})
 }
 ```
 
@@ -45,6 +45,7 @@ if(api.isSwan){
 - [兼容列表](#兼容列表)
 - [API差异](#微信小程序和支付宝小程序的API差异)
 - [使用说明](#使用说明)
+- 官方API文档：[微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)、[支付宝小程序](https://docs.alipay.com/mini/api/overview)、[百度智能小程序](http://smartprogram.baidu.com/docs/develop/api/net_rule/)
 
 
 ## 兼容列表
@@ -85,7 +86,7 @@ if(api.isSwan){
 
 1、传参不一致
  
-例如：`showLoading` 方法，加载的显示文案，微信里面是 `title` 参数，支付宝里面是 `content` 参数，如下
+例如：`showLoading` 方法，加载的显示文案，微信和百度里面是 `title` 参数，支付宝里面是 `content` 参数，如下
 ```javascript
 // 微信
 wx.showLoading({
@@ -102,7 +103,7 @@ my.showLoading({
   content: '加载中'
 })
 
-// 使用 mpapi 之后，两端兼容
+// 使用 mpapi 之后，多端兼容
 api.showLoading('加载中')
 api.showLoading({
   title: '提示内容'
@@ -111,7 +112,7 @@ api.showLoading({
 
 2、返回参不一致
  
-例如：`showActionSheet` 方法，执行完之后获取选择的索引，微信里面是 `res.tapIndex`，支付宝里面是 `res.index`，如下
+例如：`showActionSheet` 方法，执行完之后获取选择的索引，微信和百度里面是 `res.tapIndex`，支付宝里面是 `res.index`，如下
 ```javascript
 // 微信
 wx.showActionSheet({
@@ -129,7 +130,7 @@ my.showActionSheet({
   }
 })
 
-// 使用 mpapi，两端兼容
+// 使用 mpapi，多端兼容
 api.showActionSheet({
   itemList: ['台球', '羽毛球', '篮球'],
   success: (res) => {
@@ -140,7 +141,7 @@ api.showActionSheet({
 
 3、不支持，但可兼容
 
-例如：支付宝里面有 `my.alert`，而微信里面没有此方法，但是可以通过微信的 `wx.showModal` 封装一个 `alert` 方法，如下
+例如：支付宝里面有 `my.alert`，而微信和百度里面没有此方法，但是可以通过微信的 `wx.showModal` 或百度的 `swan.showModal` 封装一个 `alert` 方法，如下
 ```javascript
 api.alert('提示内容')
 
@@ -148,15 +149,15 @@ api.alert({
   content: '提示内容'
 })
 
-// 请求数据，兼容两端
+// 请求数据，兼容多端
 api.request({...}).then((res) => {})
 ```
 
 4、不支持，无法兼容
 
-有的API只在支付宝或者微信里面有效，无法兼容处理，如下
+有的 API 只在特定平台里面有效，无法兼容处理，如下
 ```javascript
-// 只在支付宝里面有效，微信里面会报错
+// 只在支付宝里面有效，微信和百度小程序里面会报错
 api.startZMVerify({...})
 
 // 建议这样处理
@@ -164,12 +165,17 @@ if(api.isAlipay){
   api.startZMVerify({...})
 }
 
-// 只在微信里面有效，支付宝里面会报错
+// 只在微信里面有效，支付宝或百度小程序里面会报错
 api.setTopBarText({...})
 
 // 建议这样处理
 if(api.isWechat){
   api.setTopBarText({...})
+}
+
+// 百度智能小程序的特殊 API 一样的道理
+if(api.isSwan){
+  api.getSwanId().then((res) => {})
 }
 ```
 
@@ -178,7 +184,7 @@ if(api.isWechat){
 
 1、支持 `Promise` 风格
 
-所有小程序的方法只要包含 `success` 回调，都已经用 `Promise` 封装过，可以直接使用，两种写法都支持，例如
+所有小程序的 API 只要包含 `success` 回调，都已经用 `Promise` 封装过，可以直接使用，两种写法都支持，例如
 ```javascript
 // 使用回调
 api.showActionSheet({
@@ -201,7 +207,7 @@ api.chooseImage({...}).then((res) => {})
 ...
 ```
 
-2、兼容方法里的传参和返回参，**以微信小程序调用为准**。两端不兼容的参数不处理，例如
+2、兼容方法里的传参和返回参，**以微信小程序调用为准**。其它端不兼容的参数不处理，例如
 ```javascript
 api.chooseImage({
   count: 1,
