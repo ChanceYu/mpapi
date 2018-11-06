@@ -1,18 +1,18 @@
 # mpapi
 
-> mpapi（miniProgram API），小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序
+mpapi（miniProgram API），小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序
 
 [![NPM][img-npm]][url-npm]
 
 [![Language][img-javascript]][url-github]
 [![License][img-mit]][url-mit]
 
-你是否遇到要同时开发输出 **微信小程序**、**支付宝小程序** 或 **百度智能小程序** ？而它们之间的 API 写法又不一样，兼容繁琐麻烦？那么此插件是不错的选择。
 
 ## 特点
 - 一次编写，多端运行，支持: 微信小程序、支付宝小程序、百度智能小程序
 - 支持 Promise（包含success回调的才有）
-- 支持不同端（平台）的判断
+- 支持不同端的判断，`api.isWechat`、`api.isAlipay`、`api.isSwan`
+
 
 ## 安装
 非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
