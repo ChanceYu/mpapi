@@ -1,4 +1,4 @@
-import { isWechat, _Promised } from '../../api'
+import { isAlipay, _Promised } from '../../api'
 
 const defaults = {
   title: '提示',
@@ -16,10 +16,10 @@ module.exports = (opts) => {
 
   opts = Object.assign({}, defaults, opts)
 
-  if(!isWechat){
+  if(isAlipay){
     opts.confirmButtonText = opts.confirmText
     opts.cancelButtonText = opts.cancelText
   }
 
-  return _Promised(isWechat ? 'showModal' : 'confirm', opts)
+  return _Promised(isAlipay ? 'confirm' : 'showModal', opts)
 }

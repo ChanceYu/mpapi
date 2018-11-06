@@ -1,9 +1,15 @@
 import nocallback from './methods/nocallback'
 
+// 微信小程序
 const isWechat = typeof wx !== 'undefined' && typeof wx.showToast === 'function'
+
+// 支付宝小程序
 const isAlipay = typeof my !== 'undefined' && typeof my.showToast === 'function'
 
-const $global = isWechat ? wx : my
+// 百度智能小程序
+const isSwan   = typeof swan !== 'undefined' && typeof swan.showToast === 'function'
+
+const $global = isWechat ? wx : (isAlipay ? my : swan)
 
 const _toString = Object.prototype.toString
 
@@ -42,8 +48,9 @@ function _addMethod(methods){
  * @param {object} opts 
  * @param {function} onResolve 
  * @param {function} onReject 
+ * @param {function} onInvoke 
  */
-function _Promised(method, opts = {}, onResolve, onReject){
+function _Promised(method, opts = {}, onResolve, onReject, onInvoke){
   return new Promise((resolve, reject) => {
     const _success = opts.success
     const _fail = opts.fail
@@ -60,7 +67,8 @@ function _Promised(method, opts = {}, onResolve, onReject){
     }
     
     if(typeof $global[method] === 'function'){
-      $global[method](opts)
+      let source = $global[method](opts)
+      onInvoke && onInvoke(source)
     }
   })
 }
@@ -68,6 +76,7 @@ function _Promised(method, opts = {}, onResolve, onReject){
 module.exports = {
   isWechat,
   isAlipay,
+  isSwan,
   $global,
   _addMethod,
   _Promised

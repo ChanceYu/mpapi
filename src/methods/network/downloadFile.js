@@ -1,8 +1,8 @@
-import { isWechat, _Promised } from '../../api'
+import { isAlipay, _Promised } from '../../api'
 
 module.exports = (opts) => {
   return _Promised('downloadFile', opts, (res) => {
-    if(!isWechat){
+    if(isAlipay){
       res.tempFilePath = res.apFilePath
     }
   })

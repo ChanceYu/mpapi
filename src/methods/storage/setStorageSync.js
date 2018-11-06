@@ -1,4 +1,4 @@
-import { $global, isWechat } from '../../api'
+import { $global, isAlipay } from '../../api'
 
 module.exports = (opts, data) => {
   if(typeof opts === 'string'){
@@ -9,10 +9,10 @@ module.exports = (opts, data) => {
   }
   
   try{
-    if(isWechat){
-      $global.setStorageSync(opts.key, opts.data)
-    }else{
+    if(isAlipay){
       $global.setStorageSync(opts)
+    }else{
+      $global.setStorageSync(opts.key, opts.data)
     }
   }catch(e){
   }

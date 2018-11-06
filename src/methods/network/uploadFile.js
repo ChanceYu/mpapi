@@ -1,7 +1,7 @@
-import { isWechat, _Promised } from '../../api'
+import { isAlipay, _Promised } from '../../api'
 
 module.exports = (opts) => {
-  if(!isWechat){
+  if(isAlipay){
     opts.fileName = opts.name
   }else{
     opts.name = opts.fileName

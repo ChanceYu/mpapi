@@ -1,7 +1,7 @@
 {
   "name": "mpapi",
-  "version": "0.0.3",
-  "description": "微信小程序和支付宝小程序API兼容插件。一次编写，两端运行",
+  "version": "0.0.4",
+  "description": "小程序API兼容插件，一次编写，多端运行。支持微信小程序、支付宝小程序、百度智能小程序",
   "main": "lib/mpapi.js",
   "scripts": {
     "dev": "NODE_ENV=development webpack --watch --config webpack.config --colors",

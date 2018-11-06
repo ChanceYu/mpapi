@@ -1,13 +1,13 @@
 # mpapi
 
-> mpapi（miniProgram API），微信小程序和支付宝小程序 API 兼容插件。一次编写，两端运行。
+> mpapi（miniProgram API），小程序 API 兼容插件。一次编写，多端运行。
 
 [![NPM][img-npm]][url-npm]
 
 [![Language][img-javascript]][url-github]
 [![License][img-mit]][url-mit]
 
-你是否遇到要同时开发输出微信小程序和支付宝小程序？而两者的API写法又不一样，兼容繁琐麻烦？那么此插件是不错的选择。
+你是否遇到要同时开发输出 **微信小程序**、**支付宝小程序** 或 **百度智能小程序**？而它们之间的API写法又不一样，兼容繁琐麻烦？那么此插件是不错的选择。
 
 
 ## 安装
@@ -15,7 +15,7 @@
 ```bash
 npm install mpapi --save
 ```
-使用
+使用，目前支持：微信小程序、支付宝小程序、百度智能小程序
 ```javascript
 const api = require('mpapi')
 
@@ -32,6 +32,11 @@ if(api.isWechat){
 if(api.isAlipay){
   // 支付宝小程序的处理
   api.startZMVerify({...})
+}
+
+if(api.isSwan){
+  // 百度智能小程序的处理
+  api.getSwanId({...})
 }
 ```
 
@@ -76,7 +81,7 @@ if(api.isAlipay){
   - [x] `setStorageSync`
 
 
-## 微信小程序和支付宝小程序的API差异
+## 小程序之间的API差异
 
 1、传参不一致
  
@@ -84,6 +89,11 @@ if(api.isAlipay){
 ```javascript
 // 微信
 wx.showLoading({
+  title: '加载中'
+})
+
+// 百度
+swan.showLoading({
   title: '加载中'
 })
 
@@ -213,7 +223,7 @@ api.checkSession().then((res) => {})
 api.getAuthCode().then((res) => {})
 
 
-// 微信小程序、支付宝小程序都可用（获取地理位置）
+// 小程序都可用（获取地理位置）
 api.getLocation().then((res) => {})
 ```
 

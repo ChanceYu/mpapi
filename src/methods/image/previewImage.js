@@ -1,14 +1,14 @@
-import { isWechat, _Promised } from '../../api'
+import { isAlipay, _Promised } from '../../api'
 
 module.exports = (opts) => {
   let current = opts.current
   let urls = opts.urls || []
 
-  if(isWechat && typeof current === 'number'){
+  if(!isAlipay && typeof current === 'number'){
     current = urls[0]
   }
 
-  if(!isWechat && typeof current === 'string'){
+  if(isAlipay && typeof current === 'string'){
     current = urls.indexOf(current)
 
     if(current === -1) current = 0

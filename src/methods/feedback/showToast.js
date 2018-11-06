@@ -1,4 +1,4 @@
-import { isWechat, _Promised } from '../../api'
+import { isAlipay, _Promised } from '../../api'
 
 const defaults = {
   title: '',
@@ -14,7 +14,7 @@ module.exports = (opts) => {
 
   opts = Object.assign({}, defaults, opts)
 
-  if(!isWechat){
+  if(isAlipay){
     opts.content = opts.title
     opts.type = opts.icon
   }
