@@ -26,14 +26,14 @@ function _addMethod(methods){
 
     if(typeof $global[attr] === 'function'){
 
-      this[attr] = (opts) => {
-        let type = _toString.call(opts)
+      this[attr] = (...opts) => {
+        let type = _toString.call(opts[0])
 
         if((type === '[object Undefined]' || type === '[object Object]')
          && nocallback.indexOf(attr) === -1){
-          return _Promised(attr, opts)
+          return _Promised(attr, opts[0])
         }else{
-          return $global[attr](opts)
+          return $global[attr](...opts)
         }
       }
 
