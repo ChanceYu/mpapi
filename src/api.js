@@ -1,4 +1,5 @@
 import nocallback from './methods/nocallback'
+import Event from './event'
 
 // 微信小程序
 const isWechat = typeof wx !== 'undefined' && typeof wx.showToast === 'function'
@@ -50,8 +51,9 @@ function _addMethod(methods){
  * @param {function} onReject 
  * @param {function} onInvoke 
  */
-function _Promised(method, opts = {}, onResolve, onReject, onInvoke){
-  return new Promise((resolve, reject) => {
+function _Promised(method, opts = {}, onResolve, onReject){
+  let oEvent = new Event()
+  let defer = new Promise((resolve, reject) => {
     const _success = opts.success
     const _fail = opts.fail
 
@@ -68,9 +70,15 @@ function _Promised(method, opts = {}, onResolve, onReject, onInvoke){
     
     if(typeof $global[method] === 'function'){
       let source = $global[method](opts)
-      onInvoke && onInvoke(source)
+
+      oEvent.trigger(source)
     }
   })
+
+  defer.__proto__.$event = (...args) => oEvent.fire.apply(oEvent, args)
+  defer.__proto__.$get = () => oEvent.source
+
+  return defer
 }
 
 module.exports = {
