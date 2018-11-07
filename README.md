@@ -11,6 +11,7 @@ mpapi（miniProgram API），小程序API兼容插件，一次编写，多端运
 ## 特点
 - 一次编写，多端运行，支持: 微信小程序、支付宝小程序、百度智能小程序
 - 支持 Promise（包含success回调的才有）
+- 支持特定 API 的事件处理，例如：中断，`request`、`downloadFile` 请求，[详情查看](#特殊api的处理)
 - 支持不同端的判断，`api.isWechat`、`api.isAlipay`、`api.isSwan`
 
 
@@ -47,8 +48,9 @@ if(api.isSwan){
 
 ## 快速查看
 - [兼容列表](#兼容列表)
-- [API差异](#微信小程序和支付宝小程序的API差异)
+- [API差异](#微信小程序和支付宝小程序的api差异)
 - [使用说明](#使用说明)
+- [特殊API的处理](#特殊api的处理)，`request`、`downloadFile`、`uploadFile` 等
 - 官方API文档：[微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)、[支付宝小程序](https://docs.alipay.com/mini/api/overview)、[百度智能小程序](http://smartprogram.baidu.com/docs/develop/api/net_rule/)
 
 
@@ -237,6 +239,25 @@ api.getAuthCode().then((res) => {})
 api.getLocation().then((res) => {})
 ```
 
+
+## 特殊API的处理
+某些 API 既要支持 Promise，又要监听它的回调函数，那么可以采用如下方式：
+```javascript
+const api = require('mpapi')
+
+const downloadTask = api.downloadFile({
+  url: 'https://example.com/audio/123', //仅为示例，并非真实的资源
+}).then((res) => {
+  console.log(res)
+})
+
+downloadTask.$event('onProgressUpdate', (res) => {
+  console.log(res)
+})
+
+downloadTask.$event('abort') // 取消下载任务
+```
+其它 API 可以类似处理，例如：`request`、`uploadFile`、`connectSocket`
 
 ## 协议
 
