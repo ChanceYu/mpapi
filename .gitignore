@@ -22,3 +22,4 @@ $RECYCLE.BIN/
 
 node_modules
 *.js.map
+.tea
