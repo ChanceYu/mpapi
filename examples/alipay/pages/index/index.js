@@ -8,7 +8,7 @@ Page({
   data: {
     polyfills: polyfills
   },
-  onReady() {
+  onLoad() {
     api.getLocation().then(console.log)
   },
   handler(e){

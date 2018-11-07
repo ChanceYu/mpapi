@@ -49,7 +49,6 @@ function _addMethod(methods){
  * @param {object} opts 
  * @param {function} onResolve 
  * @param {function} onReject 
- * @param {function} onInvoke 
  */
 function _Promised(method, opts = {}, onResolve, onReject){
   let oEvent = new Event()
