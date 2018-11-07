@@ -1,3 +1,6 @@
+/**
+ * 特殊API的事件处理（既要支持Promise，又要绑定事件）
+ */
 class Event{
 
   constructor(){

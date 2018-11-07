@@ -75,6 +75,7 @@ function _Promised(method, opts = {}, onResolve, onReject){
     }
   })
 
+  // 绑定事件回调
   defer.__proto__.$event = (...args) => oEvent.fire.apply(oEvent, args)
   defer.__proto__.$get = () => oEvent.source
 
