@@ -242,11 +242,28 @@ api.getLocation().then((res) => {})
 
 ## 特殊API的事件处理
 某些 API 既要支持 Promise，又要监听它的事件回调，那么可以采用如下方式：
+
+**以前：**
+```javascript
+const downloadTask = wx.downloadFile({
+  url: 'https://example.com/audio/123', // 仅为示例，并非真实的资源
+  success(res) {
+    console.log(res)
+  }
+})
+
+downloadTask.onProgressUpdate((res) => {
+  console.log(res)
+})
+
+downloadTask.abort() // 取消下载任务
+```
+**使用 `mpapi` 之后：**
 ```javascript
 const api = require('mpapi')
 
 const downloadTask = api.downloadFile({
-  url: 'https://example.com/audio/123', //仅为示例，并非真实的资源
+  url: 'https://example.com/audio/123', // 仅为示例，并非真实的资源
 }).then((res) => {
   console.log(res)
 })
