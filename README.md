@@ -11,7 +11,7 @@ mpapi（miniProgram API），小程序API兼容插件，一次编写，多端运
 ## 特点
 - 一次编写，多端运行，支持: 微信小程序、支付宝小程序、百度智能小程序
 - 支持 Promise（包含success回调的才有）
-- 支持特定 API 的事件处理，例如：中断，`request`、`downloadFile` 请求，[详情查看](#特殊api的处理)
+- 支持特殊 API 的事件处理，例如：中断，`request`、`downloadFile` 请求，[详情查看](#特殊api的处理)
 - 支持不同端的判断，`api.isWechat`、`api.isAlipay`、`api.isSwan`
 
 
