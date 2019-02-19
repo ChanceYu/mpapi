@@ -1,6 +1,6 @@
 /*!
  * mpapi
- * version: 0.1.2
+ * version: 0.1.3
  * address: https://github.com/ChanceYu/mpapi#readme
  * description: 小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序
  * author:  ChanceYu
