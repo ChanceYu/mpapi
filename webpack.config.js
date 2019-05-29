@@ -11,8 +11,9 @@ const getConfig = function (outputPath) {
     let config = {
         entry: path.join(__dirname, 'src/index.js'),
         output: {
+            path: outputPath,
             filename: 'mpapi.js',
-            library: 'mpApi',
+            library: '$api',
             libraryTarget: 'umd',
             umdNamedDefine: true
         },
@@ -39,18 +40,6 @@ license: ${packageJSON.license}`)
             extensions: ['.js']
         }
     }
-
-    if(isProduction){
-      config.plugins.push(
-          new webpack.optimize.UglifyJsPlugin({
-              warnings: false,
-              sourceMap: false,
-              mangle: false
-          })
-      )
-    }
-
-    config.output.path = outputPath
 
     return config
 }

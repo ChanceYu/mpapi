@@ -10,6 +10,8 @@ Page({
   },
   onLoad() {
     api.getLocation().then(console.log)
+
+    api.getScreenBrightness().then(console.log)
   },
   handler(e){
     var dataset = e.target.dataset;

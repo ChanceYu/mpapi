@@ -1,72 +1,119 @@
-import api from './api'
+import env from './env'
+import polyfills from './polyfills'
+import apis from './apis'
 
-// 操作反馈
-import alert           from './methods/feedback/alert'
-import confirm         from './methods/feedback/confirm'
-import showActionSheet from './methods/feedback/showActionSheet'
-import showLoading     from './methods/feedback/showLoading'
-import showToast       from './methods/feedback/showToast'
+// 全局对象
+const $global = env.$global
 
-// 文件相关
-import getFileInfo      from './methods/file/getFileInfo'
-import getSavedFileInfo from './methods/file/getSavedFileInfo'
-import getSavedFileList from './methods/file/getSavedFileList'
-import removeSavedFile  from './methods/file/removeSavedFile'
-import saveFile         from './methods/file/saveFile'
+const api = {
+  isWechat: env.isWechat,
+  isAlipay: env.isAlipay,
+  isSwan: env.isSwan,
+  isTt: env.isTt,
+  $global,
+  $promisfy,
+  $promisfyApi
+}
 
-// 图片相关
-import chooseImage  from './methods/image/chooseImage'
-import getImageInfo from './methods/image/getImageInfo'
-import previewImage from './methods/image/previewImage'
+// 包装成 Promise 或要兼容的小程序 API
+Object.assign(api, polyfills)
 
-// 请求相关
-import downloadFile from './methods/network/downloadFile'
-import request      from './methods/network/request'
-import uploadFile   from './methods/network/uploadFile'
+// 包装成 Promise 的小程序 API
+$promisfyApi(apis)
 
-// 数据缓存
-import clearStorage       from './methods/storage/clearStorage'
-import clearStorageSync   from './methods/storage/clearStorageSync'
-import getStorage         from './methods/storage/getStorage'
-import getStorageSync     from './methods/storage/getStorageSync'
-import getStorageInfo     from './methods/storage/getStorageInfo'
-import getStorageInfoSync from './methods/storage/getStorageInfoSync'
-import removeStorage      from './methods/storage/removeStorage'
-import removeStorageSync  from './methods/storage/removeStorageSync'
-import setStorage         from './methods/storage/setStorage'
-import setStorageSync     from './methods/storage/setStorageSync'
+// 挂载小程序其它 API
+for (let method in $global) {
+  if (api.hasOwnProperty(method)) continue;
+  
+  api[method] = $global[method]
+}
 
-api._addMethod({
-  alert,
-  confirm,
-  showActionSheet,
-  showLoading,
-  showToast,
+/**
+ * Promise 包装
+ */
+function $promisfy(method, opts = {}, onResolve, onReject, context = $global){
+  let source
+  let eventList = []
+  let defer = new Promise(function (resolve, reject) {
+    let _success = opts.success
+    let _fail = opts.fail
 
-  getFileInfo,
-  getSavedFileInfo,
-  getSavedFileList,
-  removeSavedFile,
-  saveFile,
+    opts.success = (res) => {
+      onResolve && onResolve(res)
+      _success && _success(res)
+      resolve(res)
+    }
 
-  chooseImage,
-  getImageInfo,
-  previewImage,
+    opts.fail = (res) => {
+      onReject && onReject(res)
+      _fail && _fail(res)
+      reject(res)
+    }
+    
+    // 没有此方法忽略
+    if(!isFunction(context[method])) return
 
-  downloadFile,
-  request,
-  uploadFile,
+    source = context[method](opts)
 
-  clearStorage,
-  clearStorageSync,
-  getStorage,
-  getStorageSync,
-  getStorageInfo,
-  getStorageInfoSync,
-  removeStorage,
-  removeStorageSync,
-  setStorage,
-  setStorageSync,
-})
+    if(source){
+      if(eventList.length){
+        eventList.forEach((item) => {
+          applyEvent(source, item.event, item.args)
+        })
+        eventList = []
+      }
+    }
+  })
+
+   // 提供 request、downloadFile 等特殊 API 的处理方法（既要支持 Promise，又要调用它的事件）
+  defer.__proto__.$event = (event, ...args) => {
+    if(source){
+      applyEvent(source, event, args)
+    }else{
+      eventList.push({ event, args })
+    }
+  }
+
+  return defer
+}
+
+/**
+ * 处理特殊 API 的事件
+ */
+function applyEvent(source, event, args){
+  if(event in source){
+    if(isFunction(source[event])){
+      return source[event].apply(source, args)
+    }else{
+      return source[event]
+    }
+  }
+}
+
+/**
+ * 一次包装多个 API
+ */
+function $promisfyApi(methods){
+  if(isString(methods)) methods = [methods]
+  if(!isArray(methods)) return
+
+  methods.forEach((method) => {
+    if(isFunction($global[method])){
+      api[method] = (opts) => $promisfy(method, opts)
+    }
+  })
+}
+
+function isFunction(val){
+  return typeof val === 'function'
+}
+
+function isString(val){
+  return typeof val === 'string'
+}
+
+function isArray(val){
+  return Object.prototype.toString.call(val) === '[object Array]'
+}
 
 module.exports = api
