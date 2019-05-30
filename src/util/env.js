@@ -14,7 +14,7 @@ const isTt   = typeof tt !== 'undefined' && typeof tt.showToast === 'function'
 const $global = isWechat ? wx : isAlipay ? my : isSwan ? swan : isTt ? tt : ''
 
 if(!$global){
-  throw new Error('请在小程序环境中使用，支持：微信小程序、支付宝小程序、百度智能小程序、头条小程序')
+  throw new Error('请在小程序环境中使用，支持：微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序')
 }
 
 module.exports = {

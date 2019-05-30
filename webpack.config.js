@@ -4,6 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const webpack = require('webpack');
 const path = require('path');
+const moment = require('moment');
 
 const packageJSON = require('./package.json');
 
@@ -33,6 +34,7 @@ const getConfig = function (outputPath) {
 version: ${packageJSON.version}
 address: ${packageJSON.homepage}
 description: ${packageJSON.description}
+updateDate: ${moment().format('YYYY-MM-DD')}
 author:  ${packageJSON.author}
 license: ${packageJSON.license}`)
         ],

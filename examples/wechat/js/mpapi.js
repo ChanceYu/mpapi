@@ -3,7 +3,8 @@
  * version: 0.2.0
  * address: https://github.com/ChanceYu/mpapi#readme
  * description: 小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序
- * author:  ChanceYu
+ * updateDate: 2019-05-30
+ * author:  ChanceYu <i.fish@foxmail.com>
  * license: MIT
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -78,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -88,44 +89,115 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-var _env = __webpack_require__(1);
+// 微信小程序
+var isWechat = typeof wx !== 'undefined' && typeof wx.showToast === 'function';
 
-var _env2 = _interopRequireDefault(_env);
+// 支付宝小程序
+var isAlipay = typeof my !== 'undefined' && typeof my.showToast === 'function';
 
-var _polyfills = __webpack_require__(2);
+// 百度智能小程序
+var isSwan = typeof swan !== 'undefined' && typeof swan.showToast === 'function';
+
+// 字节跳动小程序
+var isTt = typeof tt !== 'undefined' && typeof tt.showToast === 'function';
+
+// 全局对象
+var $global = isWechat ? wx : isAlipay ? my : isSwan ? swan : isTt ? tt : '';
+
+if (!$global) {
+  throw new Error('请在小程序环境中使用，支持：微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序');
+}
+
+module.exports = {
+  isWechat: isWechat,
+  isAlipay: isAlipay,
+  isSwan: isSwan,
+  isTt: isTt,
+  $global: $global
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _util = __webpack_require__(2);
+
+var _util2 = _interopRequireDefault(_util);
+
+var _polyfills = __webpack_require__(4);
 
 var _polyfills2 = _interopRequireDefault(_polyfills);
 
-var _apis = __webpack_require__(34);
+var _normalApi = __webpack_require__(36);
 
-var _apis2 = _interopRequireDefault(_apis);
+var _normalApi2 = _interopRequireDefault(_normalApi);
+
+var _deepApi = __webpack_require__(37);
+
+var _deepApi2 = _interopRequireDefault(_deepApi);
+
+var _instanceApi = __webpack_require__(38);
+
+var _instanceApi2 = _interopRequireDefault(_instanceApi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var api = _extends({}, _util2.default, _polyfills2.default);
+
+/**
+ * 普通的包装成 Promise 的小程序 API
+ */
+api.$promisfyApi(_normalApi2.default);
+
+/**
+ * 某些新实例对象上面的 API 包装成 Promise
+ * 例如：createMapContext、createLivePusherContext 等
+ */
+api.$promisfyInstanceApi(_instanceApi2.default);
+
+/**
+ * 挂载小程序其它 API
+ */
+api.$injectExtraApi();
+
+/**
+ * 深层次的 API 包装成 Promise
+ */
+api.$promisfyDeepApi(_deepApi2.default);
+
+module.exports = api;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+module.exports = _extends({}, __webpack_require__(0), __webpack_require__(3));
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _env = __webpack_require__(0);
+
+var _env2 = _interopRequireDefault(_env);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // 全局对象
 var $global = _env2.default.$global;
-
-var api = {
-  isWechat: _env2.default.isWechat,
-  isAlipay: _env2.default.isAlipay,
-  isSwan: _env2.default.isSwan,
-  isTt: _env2.default.isTt,
-  $global: $global,
-  $promisfy: $promisfy,
-  $promisfyApi: $promisfyApi
-
-  // 包装成 Promise 或要兼容的小程序 API
-};Object.assign(api, _polyfills2.default);
-
-// 包装成 Promise 的小程序 API
-$promisfyApi(_apis2.default);
-
-// 挂载小程序其它 API
-for (var method in $global) {
-  if (api.hasOwnProperty(method)) continue;
-
-  api[method] = $global[method];
-}
 
 /**
  * Promise 包装
@@ -138,6 +210,11 @@ function $promisfy(method) {
 
   var source = void 0;
   var eventList = [];
+  var applyEvent = function applyEvent(event, args) {
+    if (isFunction(source[event])) {
+      source[event].apply(source, args);
+    }
+  };
   var defer = new Promise(function (resolve, reject) {
     var _success = opts.success;
     var _fail = opts.fail;
@@ -162,7 +239,7 @@ function $promisfy(method) {
     if (source) {
       if (eventList.length) {
         eventList.forEach(function (item) {
-          applyEvent(source, item.event, item.args);
+          applyEvent(item.event, item.args);
         });
         eventList = [];
       }
@@ -176,7 +253,7 @@ function $promisfy(method) {
     }
 
     if (source) {
-      applyEvent(source, event, args);
+      applyEvent(event, args);
     } else {
       eventList.push({ event: event, args: args });
     }
@@ -186,84 +263,126 @@ function $promisfy(method) {
 }
 
 /**
- * 处理特殊 API 的事件
+ * 一次包装多个 API
  */
-function applyEvent(source, event, args) {
-  if (event in source) {
-    if (isFunction(source[event])) {
-      return source[event].apply(source, args);
-    } else {
-      return source[event];
+function $promisfyApi(methods) {
+  var _this = this;
+
+  if (!isArray(methods)) throw new Error('第一个参数必须为数组');
+
+  methods.forEach(function (method) {
+    if (isFunction($global[method])) {
+      _this[method] = function (opts) {
+        return $promisfy(method, opts, null, null, $global);
+      };
     }
+  });
+}
+
+/**
+ * 某些新实例对象上面的 API 包装成 Promise
+ * createMapContext、createLivePusherContext 等
+ */
+function $promisfyInstanceApi(instanceApi) {
+  var _this2 = this;
+
+  var _loop = function _loop(apiName) {
+    if (!$global.hasOwnProperty(apiName)) return 'continue';
+
+    _this2[apiName] = function () {
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      var instance = $global[apiName].apply($global, args);
+
+      var _loop2 = function _loop2(method) {
+        if (isFunction(instance[method])) {
+          // 不对旧的 API 重写，使用新的 API
+          // 例如：MapContext.getRegion ==> MapContext.$getRegion().then
+          instance['$' + method] = function (opts) {
+            return $promisfy(method, opts, null, null, instance);
+          };
+        }
+      };
+
+      for (var method in instance) {
+        _loop2(method);
+      }
+
+      return instance;
+    };
+  };
+
+  for (var apiName in instanceApi) {
+    var _ret = _loop(apiName);
+
+    if (_ret === 'continue') continue;
   }
 }
 
 /**
- * 一次包装多个 API
+ * 深层次的 API 包装成 Promise
+ * my.ap.xx
+ * swan.ai.xx
  */
-function $promisfyApi(methods) {
-  if (isString(methods)) methods = [methods];
-  if (!isArray(methods)) return;
+function $promisfyDeepApi(deepApi) {
+  var _this3 = this;
 
-  methods.forEach(function (method) {
-    if (isFunction($global[method])) {
-      api[method] = function (opts) {
-        return $promisfy(method, opts);
-      };
+  var _loop3 = function _loop3(apiName) {
+    if (!$global.hasOwnProperty(apiName)) return 'continue';
+
+    var obj = $global[apiName];
+
+    var _loop4 = function _loop4(method) {
+      if (isFunction(obj[method])) {
+        _this3[apiName]['$' + method] = function (opts) {
+          return $promisfy(method, opts, null, null, obj);
+        };
+      }
+    };
+
+    for (var method in obj) {
+      _loop4(method);
     }
-  });
+  };
+
+  for (var apiName in deepApi) {
+    var _ret3 = _loop3(apiName);
+
+    if (_ret3 === 'continue') continue;
+  }
+}
+
+/**
+ * 挂载小程序其它 API
+ */
+function $injectExtraApi() {
+  for (var method in $global) {
+    if (this.hasOwnProperty(method)) continue;
+
+    this[method] = $global[method];
+  }
 }
 
 function isFunction(val) {
   return typeof val === 'function';
 }
 
-function isString(val) {
-  return typeof val === 'string';
-}
-
 function isArray(val) {
   return Object.prototype.toString.call(val) === '[object Array]';
 }
 
-module.exports = api;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// 微信小程序
-var isWechat = typeof wx !== 'undefined' && typeof wx.showToast === 'function';
-
-// 支付宝小程序
-var isAlipay = typeof my !== 'undefined' && typeof my.showToast === 'function';
-
-// 百度智能小程序
-var isSwan = typeof swan !== 'undefined' && typeof swan.showToast === 'function';
-
-// 字节跳动小程序
-var isTt = typeof tt !== 'undefined' && typeof tt.showToast === 'function';
-
-// 全局对象
-var $global = isWechat ? wx : isAlipay ? my : isSwan ? swan : isTt ? tt : '';
-
-if (!$global) {
-  throw new Error('请在小程序环境中使用，支持：微信小程序、支付宝小程序、百度智能小程序、头条小程序');
-}
-
 module.exports = {
-  isWechat: isWechat,
-  isAlipay: isAlipay,
-  isSwan: isSwan,
-  isTt: isTt,
-  $global: $global
+  $promisfy: $promisfy,
+  $promisfyApi: $promisfyApi,
+  $promisfyDeepApi: $promisfyDeepApi,
+  $promisfyInstanceApi: $promisfyInstanceApi,
+  $injectExtraApi: $injectExtraApi
 };
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -275,53 +394,53 @@ module.exports = {
 
 module.exports = {
   // 交互
-  alert: __webpack_require__(3),
-  confirm: __webpack_require__(4),
-  showToast: __webpack_require__(5),
-  showLoading: __webpack_require__(6),
-  showActionSheet: __webpack_require__(7),
+  alert: __webpack_require__(5),
+  confirm: __webpack_require__(6),
+  showToast: __webpack_require__(7),
+  showLoading: __webpack_require__(8),
+  showActionSheet: __webpack_require__(9),
 
   // 导航栏
-  setNavigationBarTitle: __webpack_require__(8),
-  setNavigationBarColor: __webpack_require__(9),
+  setNavigationBarTitle: __webpack_require__(10),
+  setNavigationBarColor: __webpack_require__(11),
 
   // 文件
-  saveFile: __webpack_require__(10),
-  getFileInfo: __webpack_require__(11),
-  getSavedFileInfo: __webpack_require__(12),
-  getSavedFileList: __webpack_require__(13),
-  removeSavedFile: __webpack_require__(14),
+  saveFile: __webpack_require__(12),
+  getFileInfo: __webpack_require__(13),
+  getSavedFileInfo: __webpack_require__(14),
+  getSavedFileList: __webpack_require__(15),
+  removeSavedFile: __webpack_require__(16),
 
   // 图片
-  chooseImage: __webpack_require__(15),
-  previewImage: __webpack_require__(16),
-  compressImage: __webpack_require__(17),
-  saveImageToPhotosAlbum: __webpack_require__(18),
+  chooseImage: __webpack_require__(17),
+  previewImage: __webpack_require__(18),
+  compressImage: __webpack_require__(19),
+  saveImageToPhotosAlbum: __webpack_require__(20),
 
   // 请求
-  request: __webpack_require__(19),
-  uploadFile: __webpack_require__(20),
-  downloadFile: __webpack_require__(21),
+  request: __webpack_require__(21),
+  uploadFile: __webpack_require__(22),
+  downloadFile: __webpack_require__(23),
 
   // 数据缓存
-  setStorageSync: __webpack_require__(22),
-  getStorageSync: __webpack_require__(23),
-  clearStorageSync: __webpack_require__(24),
-  getStorageInfoSync: __webpack_require__(25),
-  removeStorageSync: __webpack_require__(26),
+  setStorageSync: __webpack_require__(24),
+  getStorageSync: __webpack_require__(25),
+  clearStorageSync: __webpack_require__(26),
+  getStorageInfoSync: __webpack_require__(27),
+  removeStorageSync: __webpack_require__(28),
 
   // 系统设备
-  getSystemInfoSync: __webpack_require__(27),
-  setScreenBrightness: __webpack_require__(28),
-  getScreenBrightness: __webpack_require__(29),
-  makePhoneCall: __webpack_require__(30),
-  scanCode: __webpack_require__(31),
-  setClipboardData: __webpack_require__(32),
-  getClipboardData: __webpack_require__(33)
+  getSystemInfoSync: __webpack_require__(29),
+  setScreenBrightness: __webpack_require__(30),
+  getScreenBrightness: __webpack_require__(31),
+  makePhoneCall: __webpack_require__(32),
+  scanCode: __webpack_require__(33),
+  setClipboardData: __webpack_require__(34),
+  getClipboardData: __webpack_require__(35)
 };
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -348,7 +467,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -377,7 +496,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -404,7 +523,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -430,7 +549,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -455,7 +574,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -472,7 +591,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -489,7 +608,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -510,7 +629,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -525,7 +644,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -540,7 +659,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -562,7 +681,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -577,7 +696,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -598,7 +717,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -626,7 +745,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -648,7 +767,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -663,7 +782,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -685,7 +804,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -702,7 +821,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -719,7 +838,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -743,7 +862,7 @@ module.exports = function (opts, data) {
 };
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,7 +887,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -781,7 +900,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -794,7 +913,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -817,7 +936,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -830,7 +949,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -845,7 +964,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -862,7 +981,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -877,7 +996,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -907,7 +1026,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -922,7 +1041,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -939,7 +1058,7 @@ module.exports = function (opts) {
 };
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -947,7 +1066,6 @@ module.exports = function (opts) {
 
 /**
  * @description: 需要简单包装成 Promise 的 API
- * @updateDate: 2019-05-30（最后修改日期）
  *
  * wx: 微信小程序
  * my: 支付宝小程序
@@ -1043,24 +1161,21 @@ module.exports = [
 'openShare', // swan
 
 // 登录、授权、用户信息
-'login', // wx swan
-'checkSession', // wx swan
-'getUserInfo', // wx swan
+'login', // wx swan tt
+'checkSession', // wx swan tt
+'getUserInfo', // wx swan tt
 'getAuthCode', // my
 'getAuthUserInfo', // my
 'getPhoneNumber', // my
-'authorize', // wx
+'authorize', // wx tt
 
 // 支付
 'tradePay', // my
-'requestPayment', // wx
+'requestPayment', // wx tt
 'requestPolymerPayment', // swan
 
 // 开放接口
-'reportAnalytics', // wx my swan
-'getSetting', // wx my swan
-'openSetting', // wx my swan
-'chooseInvoiceTitle', // wx swan
+'getSetting', 'openSetting', 'reportAnalytics', 'chooseInvoiceTitle', // wx swan
 'navigateToMiniProgram', // wx my
 'navigateBackMiniProgram', // wx my
 
@@ -1095,7 +1210,7 @@ module.exports = [
 'loadSubPackage', // swan
 
 // 联系人
-'chooseAddress', // wx swan
+'chooseAddress', // wx swan tt
 'chooseContact', // my
 'choosePhoneContact', // my
 'chooseAlipayContact', // my
@@ -1152,6 +1267,34 @@ module.exports = [
 
 // 第三方平台
 'getExtConfig'];
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @description: 深层次的 API 包装成 Promise
+ */
+
+module.exports = ['ap', // my.ap.xx
+'ai' // swan.ai.xx
+];
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @description: 某些新实例对象上面的 API 包装成 Promise
+ */
+
+module.exports = ['createMapContext', 'createLivePusherContext', 'createLivePlayerContext'];
 
 /***/ })
 /******/ ]);

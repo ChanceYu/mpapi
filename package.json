@@ -5,7 +5,8 @@
   "main": "lib/mpapi.js",
   "scripts": {
     "dev": "NODE_ENV=development webpack --watch --config webpack.config --colors",
-    "build": "NODE_ENV=production webpack --config webpack.config --colors",
+    "build": "npm run doc && NODE_ENV=production webpack --config webpack.config --colors",
+    "doc": "node ./doc.js",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -23,7 +24,7 @@
     "api",
     "mini-program"
   ],
-  "author": "ChanceYu",
+  "author": "ChanceYu <i.fish@foxmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -39,7 +40,8 @@
     "linebyline": "^1.3.0",
     "uglify-js": "^3.1.3",
     "underscore": "^1.9.1",
-    "webpack": "^3.6.0"
+    "webpack": "^3.6.0",
+    "moment": "^2.24.0"
   },
   "bugs": {
     "url": "https://github.com/ChanceYu/mpapi/issues"

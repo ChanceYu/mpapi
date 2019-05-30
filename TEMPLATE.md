@@ -1,28 +1,30 @@
 # mpapi
 
-> mpapi（miniProgram API），优雅的小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序
+> mpapi（miniProgram API），小程序 API 兼容插件，一次编写，多端运行。
 
-[![NPM][img-npm]][url-npm]
+:alarm_clock: 更新日期: <%= obj.updateDate %>
 
-[![Language][img-javascript]][url-github]
-[![License][img-mit]][url-mit]
+[![NPM][img-npm-badge]][url-npm] [![Language][img-javascript]][url-github] [![License][img-mit]][url-mit]
 
 **此项目解决的问题**：寻找不同小程序 API 之间的差异，尽可能地通过**一套 API 兼容多个小程序使用**。
 
 
 ## 特点
 - 一次编写，多端运行，支持: 微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序
-- 支持 Promise（包含success回调的才有）
-- 支持特殊 API 的事件处理，例如：`request`、`downloadFile`，[详情查看](#特殊api的事件处理)
+- 支持 Promise（包含 success 回调的才有）
+- 针对某些 API 使用做了优化，如：`api.showToast` 可以直接传 `string`、`api.setStorageSync` 无需调用 `try catch 等`，[详情](#优化的api)
+- 支持特殊 API 的事件处理，例如：`request`、`downloadFile`，[详情](#特殊api的事件处理)
 - 支持不同端的判断，`api.isWechat`、`api.isAlipay`、`api.isSwan`、`api.isTt`
 
 
 ## 安装
-非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
 ```bash
 npm install mpapi --save
 ```
-使用
+非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
+
+
+## 使用
 ```javascript
 const api = require('mpapi')
 
@@ -49,12 +51,13 @@ if(api.isSwan){
 
 
 ## 快速查看
-- [兼容API列表](#兼容api列表)
-- [其它包装成Promise的API](#其它包装成promise的api)
-- [API差异](#小程序之间的api差异)
+- [兼容 API 列表](#兼容api列表)
+- [其它包装成 Promise 的 API](#其它包装成promise的api)
+- [优化的 API](#优化的api)
+- [API 差异](#小程序之间的api差异)
 - [使用说明](#使用说明)
-- [特殊API的事件处理](#特殊api的事件处理)，`request`、`downloadFile`、`uploadFile` 等
-- 官方API文档：[微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)、[支付宝小程序](https://docs.alipay.com/mini/api/overview)、[百度智能小程序](http://smartprogram.baidu.com/docs/develop/api/net_rule/)、[字节跳动小程序](https://developer.toutiao.com/docs/framework/)
+- [特殊 API 的事件处理](#特殊api的事件处理)，`request`、`downloadFile`、`uploadFile` 等
+- 官方 API 文档：[微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)、[支付宝小程序](https://docs.alipay.com/mini/api/overview)、[百度智能小程序](http://smartprogram.baidu.com/docs/develop/api/net_rule/)、[字节跳动小程序](https://developer.toutiao.com/docs/framework/)
 
 ## 兼容API列表
 > 所有小程序都可以使用的 API
@@ -66,15 +69,19 @@ if(api.isSwan){
 
 
 ## 其它包装成Promise的API
-> 只在特定小程序下才会支持，默认支持所有。
+> 只在特定小程序下才会支持。
 
-微信小程序![](./assets/wx.png)、支付宝小程序![](./assets/my.png)、百度智能小程序![](./assets/swan.png)、字节跳动小程序![](./assets/tt.png)，有对应图标表示支持。
+微信小程序![wx](./assets/wx.png)、支付宝小程序![my](./assets/my.png)、百度智能小程序![swan](./assets/swan.png)、字节跳动小程序![tt](./assets/tt.png)，有图标表示只支持对应小程序，没有图标表示支持所有小程序。
 
-<% _.each(obj.apis, function(group){ %>
+<% _.each(obj.normalApi, function(group){ %>
 - <%= group.title %>
-<% _.each(group.items, function(item){ %>  - [x] `<%= item.title %>` <% _.each(item.labels, function(lbl){ %> ![](./assets/<%= lbl %>.png) <% }) %>
+<% _.each(group.items, function(item){ %>  - [x] `<%= item.title %>` <% _.each(item.labels, function(lbl){ %> ![%= lbl %>](./assets/<%= lbl %>.png) <% }) %>
 <% }) %>
 <% }) %>
+
+
+## 优化的API
+- `showToast`，
 
 
 ## 小程序之间的API差异
@@ -202,7 +209,7 @@ api.chooseImage({...}).then((res) => {})
 ...
 ```
 
-2、兼容方法里的传参和返回参，**以微信小程序调用为准**。其它端不兼容的参数不处理，例如
+2、兼容方法里的传参和返回参，**以微信小程序调用为准**。其它端不兼容的参数不处理（某些参数也无法处理，特定小程序不支持）开发者需要留意，例如
 ```javascript
 api.chooseImage({
   count: 1,
@@ -214,18 +221,12 @@ api.chooseImage({
 })
 ```
 
-3、不在兼容列表里面的方法，也可以通过 `api` 来调用，并且支持 `Promise` 语法（**有 `success` 回调的才有**）
+3、深层级的 API，也可以通过 `api` 来调用，并且支持 `Promise` 语法（**有 `success` 回调的才有**）
 ```javascript
-// 微信小程序可用（检查登录态是否过期）
-api.checkSession().then((res) => {})
-
-
-// 支付宝小程序可用（获取授权码）
-api.getAuthCode().then((res) => {})
-
-
-// 小程序都可用（获取地理位置）
-api.getLocation().then((res) => {})
+// 支付宝小程序支持的
+api.ap.imgRisk({...}).then((res) => {})
+api.ap.navigateToAlipayPage({...}).then((res) => {})
+...
 ```
 
 
@@ -276,6 +277,7 @@ downloadTask.$event('onProgressUpdate', (res) => {
 [url-mit]: https://opensource.org/licenses/mit-license.php
 
 [img-npm]: https://nodei.co/npm/mpapi.png?compact=true
+[img-npm-badge]: https://img.shields.io/npm/v/mpapi.svg
 [img-javascript]: https://img.shields.io/badge/language-JavaScript-brightgreen.svg
 [img-mit]: https://img.shields.io/badge/license-MIT-blue.svg
 

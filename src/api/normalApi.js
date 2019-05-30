@@ -1,6 +1,5 @@
 /**
  * @description: 需要简单包装成 Promise 的 API
- * @updateDate: 2019-05-30（最后修改日期）
  *
  * wx: 微信小程序
  * my: 支付宝小程序
@@ -110,23 +109,23 @@ module.exports = [
   'openShare', // swan
 
   // 登录、授权、用户信息
-  'login', // wx swan
-  'checkSession', // wx swan
-  'getUserInfo', // wx swan
+  'login', // wx swan tt
+  'checkSession', // wx swan tt
+  'getUserInfo', // wx swan tt
   'getAuthCode', // my
   'getAuthUserInfo', // my
   'getPhoneNumber', // my
-  'authorize', // wx
+  'authorize', // wx tt
 
   // 支付
   'tradePay', // my
-  'requestPayment', // wx
+  'requestPayment', // wx tt
   'requestPolymerPayment', // swan
   
   // 开放接口
-  'reportAnalytics', // wx my swan
-  'getSetting', // wx my swan
-  'openSetting', // wx my swan
+  'getSetting',
+  'openSetting',
+  'reportAnalytics',
   'chooseInvoiceTitle', // wx swan
   'navigateToMiniProgram', // wx my
   'navigateBackMiniProgram', // wx my
@@ -162,7 +161,7 @@ module.exports = [
   'loadSubPackage', // swan
 
   // 联系人
-  'chooseAddress', // wx swan
+  'chooseAddress', // wx swan tt
   'chooseContact', // my
   'choosePhoneContact', // my
   'chooseAlipayContact', // my

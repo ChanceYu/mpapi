@@ -1,28 +1,30 @@
 # mpapi
 
-> mpapi（miniProgram API），优雅的小程序API兼容插件，一次编写，多端运行。支持：微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序
+> mpapi（miniProgram API），小程序 API 兼容插件，一次编写，多端运行。
 
-[![NPM][img-npm]][url-npm]
+:alarm_clock: 更新日期: 2019-05-30
 
-[![Language][img-javascript]][url-github]
-[![License][img-mit]][url-mit]
+[![NPM][img-npm-badge]][url-npm] [![Language][img-javascript]][url-github] [![License][img-mit]][url-mit]
 
 **此项目解决的问题**：寻找不同小程序 API 之间的差异，尽可能地通过**一套 API 兼容多个小程序使用**。
 
 
 ## 特点
 - 一次编写，多端运行，支持: 微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序
-- 支持 Promise（包含success回调的才有）
-- 支持特殊 API 的事件处理，例如：`request`、`downloadFile`，[详情查看](#特殊api的事件处理)
+- 支持 Promise（包含 success 回调的才有）
+- 针对某些 API 使用做了优化，如：`api.showToast` 可以直接传 `string`、`api.setStorageSync` 无需调用 `try catch 等`，[详情](#优化的api)
+- 支持特殊 API 的事件处理，例如：`request`、`downloadFile`，[详情](#特殊api的事件处理)
 - 支持不同端的判断，`api.isWechat`、`api.isAlipay`、`api.isSwan`、`api.isTt`
 
 
 ## 安装
-非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
 ```bash
 npm install mpapi --save
 ```
-使用
+非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
+
+
+## 使用
 ```javascript
 const api = require('mpapi')
 
@@ -49,12 +51,13 @@ if(api.isSwan){
 
 
 ## 快速查看
-- [兼容API列表](#兼容api列表)
-- [其它包装成Promise的API](#其它包装成promise的api)
-- [API差异](#小程序之间的api差异)
+- [兼容 API 列表](#兼容api列表)
+- [其它包装成 Promise 的 API](#其它包装成promise的api)
+- [优化的 API](#优化的api)
+- [API 差异](#小程序之间的api差异)
 - [使用说明](#使用说明)
-- [特殊API的事件处理](#特殊api的事件处理)，`request`、`downloadFile`、`uploadFile` 等
-- 官方API文档：[微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)、[支付宝小程序](https://docs.alipay.com/mini/api/overview)、[百度智能小程序](http://smartprogram.baidu.com/docs/develop/api/net_rule/)、[字节跳动小程序](https://developer.toutiao.com/docs/framework/)
+- [特殊 API 的事件处理](#特殊api的事件处理)，`request`、`downloadFile`、`uploadFile` 等
+- 官方 API 文档：[微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)、[支付宝小程序](https://docs.alipay.com/mini/api/overview)、[百度智能小程序](http://smartprogram.baidu.com/docs/develop/api/net_rule/)、[字节跳动小程序](https://developer.toutiao.com/docs/framework/)
 
 ## 兼容API列表
 > 所有小程序都可以使用的 API
@@ -114,16 +117,16 @@ if(api.isSwan){
 
 
 ## 其它包装成Promise的API
-> 只在特定小程序下才会支持，默认支持所有。
+> 只在特定小程序下才会支持。
 
-微信小程序![](./assets/wx.png)、支付宝小程序![](./assets/my.png)、百度智能小程序![](./assets/swan.png)、字节跳动小程序![](./assets/tt.png)，有对应图标表示支持。
+微信小程序![wx](./assets/wx.png)、支付宝小程序![my](./assets/my.png)、百度智能小程序![swan](./assets/swan.png)、字节跳动小程序![tt](./assets/tt.png)，有图标表示只支持对应小程序，没有图标表示支持所有小程序。
 
 
 - 交互
   - [x] `hideToast` 
   - [x] `hideLoading` 
-  - [x] `showModal`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `prompt`  ![](./assets/my.png) 
+  - [x] `showModal`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `prompt`  ![%= lbl %>](./assets/my.png) 
 
 
 - 缓存
@@ -144,51 +147,51 @@ if(api.isSwan){
 - 位置
   - [x] `getLocation` 
   - [x] `openLocation` 
-  - [x] `chooseLocation`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
+  - [x] `chooseLocation`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
 
 
 - 文件图片
-  - [x] `saveImage`  ![](./assets/my.png) 
+  - [x] `saveImage`  ![%= lbl %>](./assets/my.png) 
   - [x] `getImageInfo` 
-  - [x] `chooseVideo`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `chooseMessageFile`  ![](./assets/wx.png) 
-  - [x] `saveVideoToPhotosAlbum`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `openDocument`  ![](./assets/wx.png)  ![](./assets/swan.png) 
+  - [x] `chooseVideo`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `chooseMessageFile`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `saveVideoToPhotosAlbum`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `openDocument`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
 
 
 - 音频
-  - [x] `stopVoice`  ![](./assets/wx.png) 
-  - [x] `playVoice`  ![](./assets/wx.png) 
-  - [x] `getAvailableAudioSources`  ![](./assets/wx.png) 
-  - [x] `stopBackgroundAudio`  ![](./assets/wx.png) 
-  - [x] `playBackgroundAudio`  ![](./assets/wx.png) 
-  - [x] `seekBackgroundAudio`  ![](./assets/wx.png) 
-  - [x] `pauseBackgroundAudio`  ![](./assets/wx.png) 
-  - [x] `getBackgroundAudioPlayerState`  ![](./assets/wx.png) 
-  - [x] `setInnerAudioOption`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `startRecord`  ![](./assets/wx.png) 
-  - [x] `stopRecord`  ![](./assets/wx.png) 
-  - [x] `stopRecord`  ![](./assets/wx.png) 
+  - [x] `stopVoice`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `playVoice`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getAvailableAudioSources`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `stopBackgroundAudio`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `playBackgroundAudio`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `seekBackgroundAudio`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `pauseBackgroundAudio`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getBackgroundAudioPlayerState`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `setInnerAudioOption`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `startRecord`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `stopRecord`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `stopRecord`  ![%= lbl %>](./assets/wx.png) 
 
 
 - 导航栏
-  - [x] `getTitleColor`  ![](./assets/my.png) 
-  - [x] `setNavigationBar`  ![](./assets/my.png) 
-  - [x] `showNavigationBarLoading`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `hideNavigationBarLoading`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
+  - [x] `getTitleColor`  ![%= lbl %>](./assets/my.png) 
+  - [x] `setNavigationBar`  ![%= lbl %>](./assets/my.png) 
+  - [x] `showNavigationBarLoading`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `hideNavigationBarLoading`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
 
 
 - 背景
-  - [x] `setBackgroundTextStyle`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `setBackgroundColor`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `showTabBar`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `hideTabBar`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `setTabBarItem`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `setTabBarStyle`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `showTabBarRedDot`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `hideTabBarRedDot`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `setTabBarBadge`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `removeTabBarBadge`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
+  - [x] `setBackgroundTextStyle`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setBackgroundColor`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `showTabBar`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `hideTabBar`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setTabBarItem`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setTabBarStyle`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `showTabBarRedDot`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `hideTabBarRedDot`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setTabBarBadge`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `removeTabBarBadge`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
 
 
 - 下拉刷新
@@ -198,158 +201,162 @@ if(api.isSwan){
 
 - 滚动
   - [x] `pageScrollTo` 
-  - [x] `sendSocketMessage`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
+  - [x] `sendSocketMessage`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
   - [x] `connectSocket` 
-  - [x] `closeSocket`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `startLocalServiceDiscovery`  ![](./assets/wx.png) 
-  - [x] `stopLocalServiceDiscovery`  ![](./assets/wx.png) 
+  - [x] `closeSocket`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `startLocalServiceDiscovery`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `stopLocalServiceDiscovery`  ![%= lbl %>](./assets/wx.png) 
 
 
 - 置顶
-  - [x] `setTopBarText`  ![](./assets/wx.png) 
+  - [x] `setTopBarText`  ![%= lbl %>](./assets/wx.png) 
 
 
 - 画布
-  - [x] `canvasGetImageData`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `canvasPutImageData`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `canvasToTempFilePath`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
+  - [x] `canvasGetImageData`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `canvasPutImageData`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `canvasToTempFilePath`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
 
 
 - 分享转发
-  - [x] `getShareInfo`  ![](./assets/wx.png) 
-  - [x] `updateShareMenu`  ![](./assets/wx.png) 
-  - [x] `showShareMenu`  ![](./assets/wx.png)  ![](./assets/tt.png) 
-  - [x] `hideShareMenu`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/tt.png) 
-  - [x] `showFavoriteGuide`  ![](./assets/swan.png) 
-  - [x] `openShare`  ![](./assets/swan.png) 
+  - [x] `getShareInfo`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `updateShareMenu`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `showShareMenu`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `hideShareMenu`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `showFavoriteGuide`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `openShare`  ![%= lbl %>](./assets/swan.png) 
 
 
 - 登录、授权、用户信息
-  - [x] `login`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `checkSession`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `getUserInfo`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `getAuthCode`  ![](./assets/my.png) 
-  - [x] `getAuthUserInfo`  ![](./assets/my.png) 
-  - [x] `getPhoneNumber`  ![](./assets/my.png) 
-  - [x] `authorize`  ![](./assets/wx.png) 
+  - [x] `login`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `checkSession`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `getUserInfo`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `getAuthCode`  ![%= lbl %>](./assets/my.png) 
+  - [x] `getAuthUserInfo`  ![%= lbl %>](./assets/my.png) 
+  - [x] `getPhoneNumber`  ![%= lbl %>](./assets/my.png) 
+  - [x] `authorize`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/tt.png) 
 
 
 - 支付
-  - [x] `tradePay`  ![](./assets/my.png) 
-  - [x] `requestPayment`  ![](./assets/wx.png) 
-  - [x] `requestPolymerPayment`  ![](./assets/swan.png) 
+  - [x] `tradePay`  ![%= lbl %>](./assets/my.png) 
+  - [x] `requestPayment`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `requestPolymerPayment`  ![%= lbl %>](./assets/swan.png) 
 
 
 - 开放接口
-  - [x] `reportAnalytics`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `getSetting`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `openSetting`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `chooseInvoiceTitle`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `navigateToMiniProgram`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `navigateBackMiniProgram`  ![](./assets/wx.png)  ![](./assets/my.png) 
+  - [x] `getSetting` 
+  - [x] `openSetting` 
+  - [x] `reportAnalytics` 
+  - [x] `chooseInvoiceTitle`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `navigateToMiniProgram`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `navigateBackMiniProgram`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
 
 
 - 开放接口 - 微信小程序
-  - [x] `addCard`  ![](./assets/wx.png) 
-  - [x] `openCard`  ![](./assets/wx.png) 
-  - [x] `chooseInvoice`  ![](./assets/wx.png) 
-  - [x] `startSoterAuthentication`  ![](./assets/wx.png) 
-  - [x] `checkIsSoterEnrolledInDevice`  ![](./assets/wx.png) 
-  - [x] `checkIsSupportSoterAuthentication`  ![](./assets/wx.png) 
-  - [x] `getWeRunData`  ![](./assets/wx.png) 
+  - [x] `addCard`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `openCard`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `chooseInvoice`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `startSoterAuthentication`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `checkIsSoterEnrolledInDevice`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `checkIsSupportSoterAuthentication`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getWeRunData`  ![%= lbl %>](./assets/wx.png) 
 
 
 - 开放接口 - 支付宝小程序
-  - [x] `startZMVerify`  ![](./assets/my.png) 
-  - [x] `textRiskIdentification`  ![](./assets/my.png) 
-  - [x] `addCardAuth`  ![](./assets/my.png) 
-  - [x] `getRunScene`  ![](./assets/my.png) 
-  - [x] `chooseCity`  ![](./assets/my.png) 
-  - [x] `datePicker`  ![](./assets/my.png) 
-  - [x] `optionsSelect`  ![](./assets/my.png) 
-  - [x] `multiLevelSelect`  ![](./assets/my.png) 
-  - [x] `rsa`  ![](./assets/my.png) 
+  - [x] `startZMVerify`  ![%= lbl %>](./assets/my.png) 
+  - [x] `textRiskIdentification`  ![%= lbl %>](./assets/my.png) 
+  - [x] `addCardAuth`  ![%= lbl %>](./assets/my.png) 
+  - [x] `getRunScene`  ![%= lbl %>](./assets/my.png) 
+  - [x] `chooseCity`  ![%= lbl %>](./assets/my.png) 
+  - [x] `datePicker`  ![%= lbl %>](./assets/my.png) 
+  - [x] `optionsSelect`  ![%= lbl %>](./assets/my.png) 
+  - [x] `multiLevelSelect`  ![%= lbl %>](./assets/my.png) 
+  - [x] `rsa`  ![%= lbl %>](./assets/my.png) 
 
 
 - 开放接口 - 百度智能小程序
-  - [x] `getSwanId`  ![](./assets/swan.png) 
-  - [x] `navigateToSmartProgram`  ![](./assets/swan.png) 
-  - [x] `navigateBackSmartProgram`  ![](./assets/swan.png) 
-  - [x] `setPageInfo`  ![](./assets/swan.png) 
-  - [x] `setMetaDescription`  ![](./assets/swan.png) 
-  - [x] `setMetaKeywords`  ![](./assets/swan.png) 
-  - [x] `setDocumentTitle`  ![](./assets/swan.png) 
-  - [x] `loadSubPackage`  ![](./assets/swan.png) 
+  - [x] `getSwanId`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `navigateToSmartProgram`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `navigateBackSmartProgram`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setPageInfo`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setMetaDescription`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setMetaKeywords`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `setDocumentTitle`  ![%= lbl %>](./assets/swan.png) 
+  - [x] `loadSubPackage`  ![%= lbl %>](./assets/swan.png) 
 
 
 - 联系人
-  - [x] `chooseAddress`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `chooseContact`  ![](./assets/my.png) 
-  - [x] `choosePhoneContact`  ![](./assets/my.png) 
-  - [x] `chooseAlipayContact`  ![](./assets/my.png) 
-  - [x] `addPhoneContact`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
+  - [x] `chooseAddress`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `chooseContact`  ![%= lbl %>](./assets/my.png) 
+  - [x] `choosePhoneContact`  ![%= lbl %>](./assets/my.png) 
+  - [x] `chooseAlipayContact`  ![%= lbl %>](./assets/my.png) 
+  - [x] `addPhoneContact`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
 
 
 - 字体加载
-  - [x] `loadFontFace`  ![](./assets/wx.png)  ![](./assets/my.png) 
+  - [x] `loadFontFace`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
 
 
 - 系统信息
   - [x] `getSystemInfo` 
-  - [x] `getBatteryInfo`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
+  - [x] `getBatteryInfo`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
   - [x] `getNetworkType` 
-  - [x] `setKeepScreenOn`  ![](./assets/wx.png)  ![](./assets/my.png)  ![](./assets/swan.png) 
-  - [x] `startAccelerometer`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `stopAccelerometer`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `startCompass`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `stopCompass`  ![](./assets/wx.png)  ![](./assets/swan.png)  ![](./assets/tt.png) 
-  - [x] `startDeviceMotionListening`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `stopDeviceMotionListening`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `startGyroscope`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `stopGyroscope`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `vibrate`  ![](./assets/my.png) 
+  - [x] `setKeepScreenOn`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `startAccelerometer`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `stopAccelerometer`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `startCompass`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `stopCompass`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png)  ![%= lbl %>](./assets/tt.png) 
+  - [x] `startDeviceMotionListening`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `stopDeviceMotionListening`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `startGyroscope`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `stopGyroscope`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `vibrate`  ![%= lbl %>](./assets/my.png) 
   - [x] `vibrateShort` 
   - [x] `vibrateLong` 
-  - [x] `watchShake`  ![](./assets/my.png) 
-  - [x] `setEnableDebug`  ![](./assets/wx.png)  ![](./assets/swan.png) 
-  - [x] `getServerTime`  ![](./assets/my.png) 
-  - [x] `scan`  ![](./assets/my.png) 
+  - [x] `watchShake`  ![%= lbl %>](./assets/my.png) 
+  - [x] `setEnableDebug`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
+  - [x] `getServerTime`  ![%= lbl %>](./assets/my.png) 
+  - [x] `scan`  ![%= lbl %>](./assets/my.png) 
 
 
 - 蓝牙无线
-  - [x] `getBeacons`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `startBeaconDiscovery`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `stopBeaconDiscovery`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `startWifi`  ![](./assets/wx.png) 
-  - [x] `stopWifi`  ![](./assets/wx.png) 
-  - [x] `setWifiList`  ![](./assets/wx.png) 
-  - [x] `getWifiList`  ![](./assets/wx.png) 
-  - [x] `connectWifi`  ![](./assets/wx.png) 
-  - [x] `getConnectedWifi`  ![](./assets/wx.png) 
-  - [x] `getBLEDeviceServices`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `getBLEDeviceCharacteristics`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `createBLEConnection`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `closeBLEConnection`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `writeBLECharacteristicValue`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `readBLECharacteristicValue`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `notifyBLECharacteristicValueChange`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `startBluetoothDevicesDiscovery`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `stopBluetoothDevicesDiscovery`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `openBluetoothAdapter`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `getConnectedBluetoothDevices`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `getBluetoothDevices`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `getBluetoothAdapterState`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `closeBluetoothAdapter`  ![](./assets/wx.png)  ![](./assets/my.png) 
-  - [x] `stopHCE`  ![](./assets/wx.png) 
-  - [x] `startHCE`  ![](./assets/wx.png) 
-  - [x] `getHCEState`  ![](./assets/wx.png) 
-  - [x] `sendHCEMessage`  ![](./assets/wx.png) 
+  - [x] `getBeacons`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `startBeaconDiscovery`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `stopBeaconDiscovery`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `startWifi`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `stopWifi`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `setWifiList`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getWifiList`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `connectWifi`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getConnectedWifi`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getBLEDeviceServices`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `getBLEDeviceCharacteristics`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `createBLEConnection`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `closeBLEConnection`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `writeBLECharacteristicValue`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `readBLECharacteristicValue`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `notifyBLECharacteristicValueChange`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `startBluetoothDevicesDiscovery`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `stopBluetoothDevicesDiscovery`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `openBluetoothAdapter`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `getConnectedBluetoothDevices`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `getBluetoothDevices`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `getBluetoothAdapterState`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `closeBluetoothAdapter`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/my.png) 
+  - [x] `stopHCE`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `startHCE`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `getHCEState`  ![%= lbl %>](./assets/wx.png) 
+  - [x] `sendHCEMessage`  ![%= lbl %>](./assets/wx.png) 
 
 
 - 第三方平台
-  - [x] `getExtConfig`  ![](./assets/wx.png)  ![](./assets/swan.png) 
+  - [x] `getExtConfig`  ![%= lbl %>](./assets/wx.png)  ![%= lbl %>](./assets/swan.png) 
 
 
+
+
+## 优化的API
+- `showToast`，
 
 
 ## 小程序之间的API差异
@@ -477,7 +484,7 @@ api.chooseImage({...}).then((res) => {})
 ...
 ```
 
-2、兼容方法里的传参和返回参，**以微信小程序调用为准**。其它端不兼容的参数不处理，例如
+2、兼容方法里的传参和返回参，**以微信小程序调用为准**。其它端不兼容的参数不处理（某些参数也无法处理，特定小程序不支持）开发者需要留意，例如
 ```javascript
 api.chooseImage({
   count: 1,
@@ -489,18 +496,12 @@ api.chooseImage({
 })
 ```
 
-3、不在兼容列表里面的方法，也可以通过 `api` 来调用，并且支持 `Promise` 语法（**有 `success` 回调的才有**）
+3、深层级的 API，也可以通过 `api` 来调用，并且支持 `Promise` 语法（**有 `success` 回调的才有**）
 ```javascript
-// 微信小程序可用（检查登录态是否过期）
-api.checkSession().then((res) => {})
-
-
-// 支付宝小程序可用（获取授权码）
-api.getAuthCode().then((res) => {})
-
-
-// 小程序都可用（获取地理位置）
-api.getLocation().then((res) => {})
+// 支付宝小程序支持的
+api.ap.imgRisk({...}).then((res) => {})
+api.ap.navigateToAlipayPage({...}).then((res) => {})
+...
 ```
 
 
@@ -551,6 +552,7 @@ downloadTask.$event('onProgressUpdate', (res) => {
 [url-mit]: https://opensource.org/licenses/mit-license.php
 
 [img-npm]: https://nodei.co/npm/mpapi.png?compact=true
+[img-npm-badge]: https://img.shields.io/npm/v/mpapi.svg
 [img-javascript]: https://img.shields.io/badge/language-JavaScript-brightgreen.svg
 [img-mit]: https://img.shields.io/badge/license-MIT-blue.svg
 
