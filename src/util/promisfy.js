@@ -1,6 +1,6 @@
 import env from './env'
 
-// 全局对象
+// 小程序全局对象
 const $global = env.$global
 
 /**

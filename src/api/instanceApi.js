@@ -5,8 +5,8 @@
  * 
  * let mapContext = api.createMapContext(id)
  * 
- * mapContext.getCenterLocation().then()
- * mapContext.getRegion().then()
+ * mapContext.$getCenterLocation().then()
+ * mapContext.$getRegion().then()
  * ...
  */
 
