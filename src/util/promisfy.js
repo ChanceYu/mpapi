@@ -72,26 +72,29 @@ function $promisfy(method, opts = {}, onResolve, onReject, context = $global){
 
   /**
    * 某些新实例对象上面的 API 包装成 Promise
-   * createMapContext、createLivePusherContext 等
+   * createMapContext、getFileSystemManager 等
    */
   function $promisfyInstanceApi(instanceApi){
-    for(let apiName in instanceApi){
-      if(!$global.hasOwnProperty(apiName)) continue;
+    instanceApi.forEach((apiName) => {
+      if(!$global.hasOwnProperty(apiName)) return;
       
       this[apiName] = function(...args){
         let instance = $global[apiName].apply($global, args)
+        let methods = [...Object.keys(instance), ...Object.getOwnPropertyNames(instance.__proto__)]
 
-        for(let method in instance){
+        methods = methods.filter((method) => method !== 'constructor')
+
+        methods.forEach((method) => {
           if(isFunction(instance[method])){
             // 不对旧的 API 重写，使用新的 API
             // 例如：MapContext.getRegion ==> MapContext.$getRegion().then
             instance['$' + method] = (opts) => $promisfy(method, opts, null, null, instance)
           }
-        }
+        })
         
         return instance
       }
-    }
+    })
   }
 
 
@@ -101,17 +104,17 @@ function $promisfy(method, opts = {}, onResolve, onReject, context = $global){
    * swan.ai.xx
    */
   function $promisfyDeepApi(deepApi){
-    for(let apiName in deepApi){
-      if(!$global.hasOwnProperty(apiName)) continue;
+    deepApi.forEach((apiName) => {
+      if(!$global.hasOwnProperty(apiName)) return;
+      
 
       let obj = $global[apiName]
-  
       for(let method in obj){
         if(isFunction(obj[method])){
           this[apiName]['$' + method] = (opts) => $promisfy(method, opts, null, null, obj)
         }
       }
-    }
+    })
   }
 
   /**

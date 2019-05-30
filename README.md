@@ -2,7 +2,7 @@
 
 > mpapi（miniProgram API），小程序 API 兼容插件，一次编写，多端运行。
 
-:alarm_clock: 更新日期: 2019-05-30
+:alarm_clock: 更新日期: 2019-05-31
 
 [![NPM][img-npm-badge]][url-npm] [![Language][img-javascript]][url-github] [![License][img-mit]][url-mit]
 
@@ -32,28 +32,12 @@ api.alert({...}).then((res) => {})
 api.confirm({...}).then((res) => {})
 api.getLocation().then((res) => {})
 ...
-
-// 微信小程序的处理
-if(api.isWechat){
-  api.setTopBarText({...}).then((res) => {})
-}
-
-// 支付宝小程序的处理
-if(api.isAlipay){
-  api.startZMVerify({...}).then((res) => {})
-}
-
-// 百度智能小程序的处理
-if(api.isSwan){
-  api.getSwanId().then((res) => {})
-}
 ```
 
 
 ## 快速查看
 - [兼容 API 列表](#兼容api列表)
 - [其它包装成 Promise 的 API](#其它包装成promise的api)
-- [优化的 API](#优化的api)
 - [API 差异](#小程序之间的api差异)
 - [使用说明](#使用说明)
 - [特殊 API 的事件处理](#特殊api的事件处理)，`request`、`downloadFile`、`uploadFile` 等
@@ -119,7 +103,7 @@ if(api.isSwan){
 ## 其它包装成Promise的API
 > 只在特定小程序下才会支持。
 
-微信小程序![wx](./assets/wx.png)、支付宝小程序![my](./assets/my.png)、百度智能小程序![swan](./assets/swan.png)、字节跳动小程序![tt](./assets/tt.png)，有图标表示只支持对应小程序，没有图标表示支持所有小程序。
+微信小程序![wx](./assets/wx.png)、支付宝小程序![my](./assets/my.png)、百度智能小程序![swan](./assets/swan.png)、字节跳动小程序![tt](./assets/tt.png)，有图标表示只支持对应小程序，没有图标表示都支持。
 
 
 - 交互
@@ -354,6 +338,41 @@ if(api.isSwan){
 
 
 
+- **深层级的 API**
+  - `api.ap` ![my](./assets/my.png)
+    - [x] `api.ap.$faceVerify`
+    - [x] `api.ap.$navigateToAlipayPage`
+    - [x] `...`
+  - `api.ai` ![swan](./assets/swan.png)
+    - [x] `api.ai.$ocrIdCard`
+    - [x] `api.ai.$ocrBankCard`
+    - [x] `...`
+
+- **某些新实例的对象上面的 API**
+  
+  - [x] `createMapContext` ![%= lbl %>](./assets/wx.png) ![%= lbl %>](./assets/my.png) ![%= lbl %>](./assets/swan.png) 
+  - [x] `createVideoContext` ![%= lbl %>](./assets/wx.png) ![%= lbl %>](./assets/swan.png) 
+  - [x] `createAudioContext` ![%= lbl %>](./assets/wx.png) 
+  - [x] `createCameraContext` ![%= lbl %>](./assets/wx.png) ![%= lbl %>](./assets/swan.png) 
+  - [x] `createInnerAudioContext` ![%= lbl %>](./assets/wx.png) ![%= lbl %>](./assets/swan.png) ![%= lbl %>](./assets/tt.png) 
+  - [x] `createLivePusherContext` ![%= lbl %>](./assets/wx.png) 
+  - [x] `createLivePlayerContext` ![%= lbl %>](./assets/wx.png) 
+  - [x] `getBackgroundAudioManager` ![%= lbl %>](./assets/wx.png) ![%= lbl %>](./assets/swan.png) 
+  - [x] `getRecorderManager` ![%= lbl %>](./assets/wx.png) ![%= lbl %>](./assets/swan.png) ![%= lbl %>](./assets/tt.png) 
+  - [x] `createSelectorQuery` 
+  - [x] `getFileSystemManager` ![%= lbl %>](./assets/wx.png) 
+  - [x] `createARCameraContext` ![%= lbl %>](./assets/swan.png) 
+
+例如：**注意：方法加了 `$` 前缀**
+```javascript
+let ctx = api.createMapContext('maper')
+
+ctx.$getCenterLocation().then((res) => {
+  console.log('createMapContext:getCenterLocation')
+  console.log(res)
+})
+```
+
 
 ## 小程序之间的API差异
 
@@ -492,14 +511,6 @@ api.chooseImage({
 })
 ```
 
-3、深层级的 API，也可以通过 `api` 来调用，并且支持 `Promise` 语法（**有 `success` 回调的才有**）
-```javascript
-// 支付宝小程序支持的
-api.ap.imgRisk({...}).then((res) => {})
-api.ap.navigateToAlipayPage({...}).then((res) => {})
-...
-```
-
 
 ## 特殊API的事件处理
 某些 API 既要支持 Promise，又要调用它的事件，那么可以采用如下方式：
@@ -544,7 +555,7 @@ downloadTask.$event('onProgressUpdate', (res) => {
 
 
 ## Changelog
-[更新日志](./CHANGELOG.md)。
+[更新日志](./CHANGELOG.md)
 
 
 ## License

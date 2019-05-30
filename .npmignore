@@ -1,4 +1,7 @@
-examples
+assets
+example
 node_modules
 *.js.map
 webpack.config.js
+package-lock.json
+CHANGELOG.md

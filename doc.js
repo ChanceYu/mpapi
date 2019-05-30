@@ -8,9 +8,11 @@ const TEMPLATE = path.join(__dirname, 'TEMPLATE.md')
 const README = path.join(__dirname, 'README.md')
 
 const NORMALAPI_FILE = path.join(__dirname, 'src/api/normalApi.js')
+const INSTANCEAPI_FILE = path.join(__dirname, 'src/api/instanceApi.js')
 const POLYFILLS_FILE = path.join(__dirname, 'src/polyfills/index.js')
 
 let NORMALAPI_DATA = []
+let INSTANCEAPI_DATA = []
 let POLYFILLS_DATA = []
 
 // normalApi.js 转换成数组数据
@@ -41,6 +43,43 @@ function handlerNormalApi(){
           }
           
           last.items.push({
+            title: matchApi[1],
+            labels: labels
+          })
+        }
+      }
+    });
+  
+    rl.on('end', resolve)
+  })
+}
+
+
+
+// instanceApi.js 转换成数组数据
+function handlerInstanceApi(){
+  let rl = readline(INSTANCEAPI_FILE, { retainBuffer: true })
+
+  let ready = false
+
+  return new Promise((resolve) => {
+    rl.on('line', (data) => {
+      let content = data.toString()
+      
+      if(/module\.exports/.test(content)){
+        ready = true
+      }
+  
+      if(ready){
+        let matchApi = content.match(/'(\w+)',(\s+\/\/\s+([\w\s]+))?/)
+        if(matchApi && matchApi[1]){
+          let labels = []
+  
+          if(matchApi[3]){
+            labels = matchApi[3].split(/\s/)
+          }
+          
+          INSTANCEAPI_DATA.push({
             title: matchApi[1],
             labels: labels
           })
@@ -102,6 +141,7 @@ function writeMarkdown(){
 
   tplContent = compiled({
     updateDate: moment().format('YYYY-MM-DD'),
+    instanceApi: INSTANCEAPI_DATA,
     normalApi: NORMALAPI_DATA,
     polyfills: POLYFILLS_DATA
   });
@@ -111,6 +151,7 @@ function writeMarkdown(){
 
 async function init(){
   await handlerNormalApi()
+  await handlerInstanceApi()
   await handlerPolyfills()
   
   writeMarkdown()

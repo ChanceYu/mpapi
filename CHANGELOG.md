@@ -1,3 +1,7 @@
+## 0.2.1
+- 新增：深层级的 API `my.ap.xx`、`swan.ai.xx` 和 `createMapContext` 之类的 API 处理
+- 修改：example 示例为 `mpvue`
+
 ## 0.2.0
 - 新增字节跳动小程序
 - 重构

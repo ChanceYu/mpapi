@@ -16,7 +16,7 @@ api.$promisfyApi(normalApi)
 
 /**
  * 某些新实例对象上面的 API 包装成 Promise
- * 例如：createMapContext、createLivePusherContext 等
+ * 例如：createMapContext、getFileSystemManager 等
  */
 api.$promisfyInstanceApi(instanceApi)
 
