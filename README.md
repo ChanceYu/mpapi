@@ -12,7 +12,7 @@
 ## 特点
 - 一次编写，多端运行，支持: 微信小程序、支付宝小程序、百度智能小程序、字节跳动小程序
 - 支持 Promise（包含 success 回调的才有）
-- 针对某些 API 使用做了优化，如：`api.showToast` 可以直接传 `string`、`api.setStorageSync` 无需调用 `try catch 等`，[详情](#优化的api)
+- 针对某些 API 使用做了优化，如：`api.showToast` 可以直接传 `string`、`api.setStorageSync` 无需调用 `try catch 等`
 - 支持特殊 API 的事件处理，例如：`request`、`downloadFile`，[详情](#特殊api的事件处理)
 - 支持不同端的判断，`api.isWechat`、`api.isAlipay`、`api.isSwan`、`api.isTt`
 
@@ -355,10 +355,6 @@ if(api.isSwan){
 
 
 
-## 优化的API
-- `showToast`，
-
-
 ## 小程序之间的API差异
 
 1、传参不一致
@@ -542,7 +538,16 @@ downloadTask.$event('onProgressUpdate', (res) => {
 ```
 其它 API 可以类似处理，例如：`request`、`uploadFile`、`connectSocket`
 
-## 协议
+
+## Issues
+如果您在使用过程中发现 Bug，或者有好的建议，欢迎[报告问题](https://github.com/ChanceYu/mpapi/issues)。
+
+
+## Changelog
+[更新日志](./CHANGELOG.md)。
+
+
+## License
 
 [![license][img-mit]][url-mit]
 
