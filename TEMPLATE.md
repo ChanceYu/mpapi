@@ -2,7 +2,7 @@
 
 > mpapi（miniProgram API），小程序 API 兼容插件，一次编写，多端运行。
 
-:alarm_clock: 更新日期: <%= obj.updateDate %>
+:alarm_clock: 更新日期: <%= obj.updateDate %>，小程序功能一直在更新，新版本可能有所差异，请留意。
 
 [![NPM][img-npm-badge]][url-npm] [![Language][img-javascript]][url-github] [![License][img-mit]][url-mit]
 
@@ -21,7 +21,7 @@
 ```bash
 npm install mpapi --save
 ```
-非npm安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
+非 npm 安装方式，直接引入 `lib` 目录下的 `mpapi.js` 到项目即可
 
 
 ## 使用
@@ -53,7 +53,7 @@ api.getLocation().then((res) => {})
 
 
 ## 其它包装成Promise的API
-> 只在特定小程序下才会支持。
+> 只在特定小程序下才会支持
 
 微信小程序![wx](./assets/wx.png)、支付宝小程序![my](./assets/my.png)、百度智能小程序![swan](./assets/swan.png)、字节跳动小程序![tt](./assets/tt.png)，有图标表示只支持对应小程序，没有图标表示都支持。
 
@@ -63,7 +63,7 @@ api.getLocation().then((res) => {})
 <% }) %>
 <% }) %>
 
-- **深层级的 API**
+- **深层级的 API，注意：方法加了 `$` 前缀**
   - `api.ap` ![my](./assets/my.png)
     - [x] `api.ap.$faceVerify`
     - [x] `api.ap.$navigateToAlipayPage`
