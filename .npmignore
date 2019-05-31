@@ -1,7 +1,10 @@
 assets
 example
 node_modules
+src
 *.js.map
 webpack.config.js
 package-lock.json
 CHANGELOG.md
+TEMPLATE.md
+doc.js
