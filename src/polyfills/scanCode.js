@@ -5,7 +5,9 @@ const TYPE_MAP = {
 
 module.exports = function(opts){
   if(this.isAlipay){
-    opts.hideAlbum = opts.onlyFromCamera
+    if(!opts.hasOwnProperty('hideAlbum')){
+      opts.hideAlbum = opts.onlyFromCamera
+    }
 
     if(opts.scanType){
       opts.type = opts.type || TYPE_MAP[opts.scanType[0]]
