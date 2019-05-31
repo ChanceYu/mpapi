@@ -24,7 +24,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "mpapi": "^0.2.1",
+    "mpapi": "^0.2.2",
     "mpvue": "^2.0.0",
     "vuex": "^3.0.1"
   },
