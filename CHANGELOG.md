@@ -1,3 +1,6 @@
+## 0.2.2
+- 修复：某些参数值为 `boolean` 或 `number` 不正确
+
 ## 0.2.1
 - 新增：深层级的 API `my.ap.xx`、`swan.ai.xx` 和 `createMapContext` 之类的 API 处理
 - 修改：example 示例为 `mpvue`
